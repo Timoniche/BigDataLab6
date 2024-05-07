@@ -1,4 +1,5 @@
 import configparser
+import pathlib
 
 from pyspark.sql import SparkSession
 
@@ -6,7 +7,8 @@ from pyspark.sql import SparkSession
 class SparkSessionProvider:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
+        curdir = str(pathlib.Path(__file__).parent)
+        self.config.read(curdir + '/config.ini')
         self.spark_session = SparkSession.builder \
             .master(self.config['spark']['master']) \
             .appName(self.config['spark']['appName']) \

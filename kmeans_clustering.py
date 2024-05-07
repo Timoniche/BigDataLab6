@@ -1,4 +1,5 @@
 import configparser
+import pathlib
 
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.evaluation import ClusteringEvaluator
@@ -8,7 +9,8 @@ from pyspark.sql import DataFrame
 class KMeansClustering:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
+        curdir = str(pathlib.Path(__file__).parent)
+        self.config.read(curdir + '/config.ini')
 
         self.features_column = self.config['scaler']['scaledColumnName']
         self.evaluator = ClusteringEvaluator(

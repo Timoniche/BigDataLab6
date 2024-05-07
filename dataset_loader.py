@@ -10,9 +10,9 @@ class DatasetLoader:
             spark_session: SparkSession,
     ):
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
+        self.curdir = str(pathlib.Path(__file__).parent)
+        self.config.read(self.curdir + '/config.ini')
         self.spark_session = spark_session
-        self.curdir = str(pathlib.Path(__file__).parent.resolve())
 
     def load_dataset(self) -> DataFrame:
         dataset = self.spark_session.read.csv(

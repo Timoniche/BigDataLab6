@@ -1,4 +1,5 @@
 import configparser
+import pathlib
 
 from pyspark.ml.feature import StandardScaler
 from pyspark.sql import DataFrame
@@ -7,7 +8,8 @@ from pyspark.sql import DataFrame
 class Scaler:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
+        curdir = str(pathlib.Path(__file__).parent)
+        self.config.read(curdir + '/config.ini')
         input_col = self.config['vectorizer']['vectorizedColumnName']
         self.output_col = self.config['scaler']['scaledColumnName']
 

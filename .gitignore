@@ -1,2 +1,3 @@
 /.venv/
 /.idea/
+/hadoop/docker_compose(move_to_hadoop).yml
