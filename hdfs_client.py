@@ -1,9 +1,8 @@
 import configparser
 import pathlib
 
-import pandas as pd
-
 from hdfs import InsecureClient
+from pyspark.sql import DataFrame, SparkSession
 
 
 class HdfsClient:
@@ -16,29 +15,52 @@ class HdfsClient:
             user=self.config['hadoop']['user'],
         )
 
-    def write_csv(
-            self,
-            csvpath,
-            hdfs_csvpath,
-            overwrite=True,
-    ):
-        df = pd.read_csv(
-            csvpath,
-            sep='\t',
-            low_memory=False,
-        )
-        with self.client.write(
-                hdfs_csvpath,
-                encoding='utf-8',
-                overwrite=overwrite,
-        ) as writer:
-            df.to_csv(writer)
-
+    # noinspection PyIncorrectDocstring
     def read_csv(
             self,
-            hdfs_csvpath,
-    ):
-        with self.client.read(hdfs_csvpath, encoding='utf-8') as reader:
-            df = pd.read_csv(reader)
+            hdfs_csv_path,
+            local_path,
+            spark_session: SparkSession,
+            overwrite_local=True,
+    ) -> DataFrame:
+        """
+        :param local_path: Be careful, dataframes are lazy, clean local_path file after collect methods only
+        """
+        self.download_file(
+            hdfs_path=hdfs_csv_path,
+            local_path=local_path,
+            overwrite=overwrite_local,
+        )
+
+        df = spark_session.read.csv(
+            path=local_path,
+            header=True,
+            inferSchema=True,
+            sep='\t',
+        )
 
         return df
+
+    def upload_file(
+            self,
+            hdfs_path,
+            local_path,
+            overwrite,
+    ):
+        self.client.upload(
+            hdfs_path=hdfs_path,
+            local_path=local_path,
+            overwrite=overwrite,
+        )
+
+    def download_file(
+            self,
+            hdfs_path,
+            local_path,
+            overwrite,
+    ):
+        self.client.download(
+            hdfs_path=hdfs_path,
+            local_path=local_path,
+            overwrite=overwrite,
+        )

@@ -2,3 +2,6 @@
 /.idea/
 /hadoop/docker_compose(move_to_hadoop).yml
 /playground.py
+/.coverage
+/tmp.csv
+/unit_tests/tmp.csv
