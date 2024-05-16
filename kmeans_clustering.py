@@ -5,9 +5,14 @@ from pyspark.ml.clustering import KMeans
 from pyspark.ml.evaluation import ClusteringEvaluator
 from pyspark.sql import DataFrame
 
+from logger import Logger
+
 
 class KMeansClustering:
     def __init__(self):
+        logger = Logger(show=True)
+        self.log = logger.get_logger(__name__)
+
         self.config = configparser.ConfigParser()
         curdir = str(pathlib.Path(__file__).parent)
         self.config.read(curdir + '/config.ini')
@@ -34,6 +39,6 @@ class KMeansClustering:
             score = self.evaluator.evaluate(predictions)
 
             silhouette_scores.append(score)
-            print(f'Silhouette Score for k = {k} is {score}')
+            self.log.info(f'Silhouette Score for k = {k} is {score}')
 
         return silhouette_scores

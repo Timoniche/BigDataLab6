@@ -5,3 +5,5 @@
 /.coverage
 /tmp.csv
 /unit_tests/tmp.csv
+/logfile.log
+/silhouette.png
