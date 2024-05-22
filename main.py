@@ -42,6 +42,7 @@ def main():
 
     vectorized_dataset = vectorizer.vectorize(dataset)
     scaled_dataset = scaler.scale(vectorized_dataset)
+    scaled_dataset.collect()
 
     scores = clusterizer.clusterize(scaled_dataset)
     plot_silhouette_scores(scores, clusterizer.k_search_range)
