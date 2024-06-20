@@ -1,21 +1,11 @@
 import os.path
 
-import matplotlib.pyplot as plt
-
 from hdfs_client import HdfsClient
 from kmeans_clustering import KMeansClustering
 from scaler import Scaler
 from spark_session_provider import SparkSessionProvider
 from utils import root_dir
 from vectorizer import Vectorizer
-
-
-def plot_silhouette_scores(scores, k_search_range):
-    plt.plot(k_search_range, scores)
-    plt.xlabel('k')
-    plt.ylabel('silhouette score')
-    plt.title('Silhouette Score')
-    plt.show()
 
 
 def main():
@@ -44,8 +34,7 @@ def main():
     scaled_dataset = scaler.scale(vectorized_dataset)
     scaled_dataset.collect()
 
-    scores = clusterizer.clusterize(scaled_dataset)
-    plot_silhouette_scores(scores, clusterizer.k_search_range)
+    _ = clusterizer.clusterize(scaled_dataset)
 
     spark.stop()
 
